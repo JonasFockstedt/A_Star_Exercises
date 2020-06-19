@@ -16,9 +16,9 @@
 # 1 = Occupied space
 grid = [[0, 0, 1, 0, 0, 0],
         [0, 0, 1, 0, 0, 0],
-        [0, 0, 0, 0, 1, 0],
-        [0, 0, 1, 1, 1, 0],
-        [0, 0, 0, 0, 1, 0]]
+        [0, 0, 1, 0, 1, 0],
+        [0, 0, 1, 0, 1, 0],
+        [0, 0, 1, 0, 1, 0]]
 init = [0, 0]  # starting position
 goal = [len(grid)-1, len(grid[0])-1]  # goal position
 delta = [[-1, 0],  # go up
@@ -27,6 +27,11 @@ delta = [[-1, 0],  # go up
          [0, 1]]  # do right
 delta_name = ['^', '<', 'v', '>']  # ignore for now
 cost = 1  # each move costs 1
+expand = [[-1, -1, -1, -1, -1, -1],
+          [-1, -1, -1, -1, -1, -1],
+          [-1, -1, -1, -1, -1, -1],
+          [-1, -1, -1, -1, -1, -1],
+          [-1, -1, -1, -1, -1, -1]]
 
 
 def search():
@@ -34,6 +39,7 @@ def search():
     open_list = [[0, 0]]
     current_state = init
     visited_states = []
+    expansion_nbr = 0
 
     while current_state != goal:
         possible_new_states = []
@@ -60,11 +66,14 @@ def search():
         visited_states.append(current_state)
         # Add new current state to the open list.
         open_list.extend(possible_new_states)
+        # Note which node has been expanded and in which order it was opened.
+        expand[current_state[0]][current_state[1]] = expansion_nbr
         # If the open list is empty, there are no more nodes to check and the search failed.
         if not open_list:
             return 'Fail'
         # Change state to the most recently discovered one.
         current_state = open_list[-1]
+        expansion_nbr += 1
         g_value += cost
 
     return [g_value, current_state[0], current_state[1]]
@@ -72,3 +81,5 @@ def search():
 
 if __name__ == '__main__':
     print(search())
+    for row in expand:
+        print(row)
