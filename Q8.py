@@ -79,7 +79,7 @@ def search():
 
     # Expansion of final node.
     expand[current_state[1]][current_state[2]] = expansion_nbr
-    return [g_value, current_state[0], current_state[1]]
+    return current_state
 
 
 if __name__ == '__main__':

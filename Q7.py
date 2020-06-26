@@ -66,7 +66,7 @@ def search():
         # Change state to the latest discovered one.
         current_state = open_list[0]
 
-    return [current_state[0], current_state[1], current_state[2]]
+    return current_state
 
 
 if __name__ == '__main__':
