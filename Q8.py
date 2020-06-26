@@ -77,6 +77,8 @@ def search():
         current_state = open_list[0]
         expansion_nbr += 1
 
+    # Expansion of final node.
+    expand[current_state[1]][current_state[2]] = expansion_nbr
     return [g_value, current_state[0], current_state[1]]
 
 
