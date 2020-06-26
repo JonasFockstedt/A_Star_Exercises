@@ -37,18 +37,20 @@ expand = [[-1, -1, -1, -1, -1, -1],
 def search():
     g_value = 0     # The cost to reach the goal.
     open_list = [[0, 0]]
-    current_state = init
+    current_state = [0] + init  # [cost, y-coordinate, x-coordinate]
     visited_states = []
     expansion_nbr = 0
 
-    while current_state != goal:
+    # Run as long as the goal state has not been found.
+    while current_state[1] != goal[0] or current_state[2] != goal[1]:
         possible_new_states = []
         # Move through the move options from the current state.
         for action in delta:
+            new_state = [action[0] + current_state[1],
+                         action[1] + current_state[2]]
             # Check whether the next state has been visited before.
-            if [action[0] + current_state[0], action[1] + current_state[1]] not in visited_states:
-                next_state = [action[0] + current_state[0],
-                              action[1] + current_state[1]]
+            if new_state not in visited_states and new_state not in [position[1:] for position in open_list]:
+                next_state = [current_state[0]+1, new_state[0], new_state[1]]
 
                 # -1 not in next_state - check whether the next state is outside of the map.
                 # next_state[0] < 5 - check if we are inside the map on the x-axis.
@@ -56,25 +58,24 @@ def search():
                 # grid[next_state[0]][next_state[1]] is not 1 - check so the value of the next state is not 1 (obstacle).
                 # next_state not in visited_states - check if we have already been in the next state.
                 # next_state not in open_list - check if the next state is not a state which has already been discovered.
-                if -1 not in next_state and next_state[0] < 5 and next_state[1] < 6 and grid[next_state[0]][next_state[1]] != 1 and next_state not in visited_states and next_state not in open_list:
+                if -1 not in next_state and next_state[1] < 5 and next_state[2] < 6 and grid[next_state[1]][next_state[2]] != 1 and next_state[1:] not in visited_states:
                     # Next state is a valid move, add it to the list of possible new states.
                     possible_new_states.append(next_state)
 
-        # Remove current satte from open list.
-        open_list.remove(current_state)
+        # Remove current state from open list.
+        del open_list[0]
         # Add current state to the list of visited states.
-        visited_states.append(current_state)
+        visited_states.append(current_state[1:])
         # Add new current state to the open list.
         open_list.extend(possible_new_states)
         # Note which node has been expanded and in which order it was opened.
-        expand[current_state[0]][current_state[1]] = expansion_nbr
+        expand[current_state[1]][current_state[2]] = expansion_nbr
         # If the open list is empty, there are no more nodes to check and the search failed.
         if not open_list:
             return 'Fail'
-        # Change state to the most recently discovered one.
-        current_state = open_list[-1]
+        # Change state to the latest discovered one.
+        current_state = open_list[0]
         expansion_nbr += 1
-        g_value += cost
 
     return [g_value, current_state[0], current_state[1]]
 
