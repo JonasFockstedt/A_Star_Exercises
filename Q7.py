@@ -63,7 +63,7 @@ def search():
         # If the open list is empty, there are no more nodes to check and the search failed.
         if not open_list:
             return 'Fail'
-        # Change state to the most recently discovered one.
+        # Change state to the latest discovered one.
         current_state = open_list[0]
 
     return [current_state[0], current_state[1], current_state[2]]
