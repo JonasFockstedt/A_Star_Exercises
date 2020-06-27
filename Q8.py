@@ -42,7 +42,7 @@ def search():
     expansion_nbr = 0
 
     # Run as long as the goal state has not been found.
-    while current_state[1] != goal[0] or current_state[2] != goal[1]:
+    while current_state[1:] != goal:
         possible_new_states = []
         # Move through the move options from the current state.
         for action in delta:
@@ -53,11 +53,10 @@ def search():
                 next_state = [current_state[0]+1, new_state[0], new_state[1]]
 
                 # -1 not in next_state - check whether the next state is outside of the map.
-                # next_state[0] < 5 - check if we are inside the map on the x-axis.
-                # next_state[1] < 6 - check if we are inside te map on the y-axis.
-                # grid[next_state[0]][next_state[1]] is not 1 - check so the value of the next state is not 1 (obstacle).
-                # next_state not in visited_states - check if we have already been in the next state.
-                # next_state not in open_list - check if the next state is not a state which has already been discovered.
+                # next_state[1] < 5 - check if we are inside the map on the x-axis.
+                # next_state[2] < 6 - check if we are inside te map on the y-axis.
+                # grid[next_state[1]][next_state[2]] != 1 - check so the value of the next state is not 1 (obstacle).
+                # next_state[1:] not in visited_states - check if we have already been in the next state.
                 if -1 not in next_state and next_state[1] < 5 and next_state[2] < 6 and grid[next_state[1]][next_state[2]] != 1 and next_state[1:] not in visited_states:
                     # Next state is a valid move, add it to the list of possible new states.
                     possible_new_states.append(next_state)
@@ -83,6 +82,15 @@ def search():
 
 
 if __name__ == '__main__':
+    # Do the search.
     print(search())
+
+    print_string = ''
     for row in expand:
-        print(row)
+        print_string += '['
+        for element in row:
+            print_string += f'{element},\t'
+        print_string += ']\n'
+
+    # Print out the expansion map, showing in which order the nodes where expanded.
+    print(print_string)

@@ -25,7 +25,6 @@ delta = [[-1, 0],  # go up
          [0, -1],  # go left
          [1, 0],  # go down
          [0, 1]]  # do right
-delta_name = ['^', '<', 'v', '>']  # ignore for now
 cost = 1  # each move costs 1
 
 
@@ -35,7 +34,7 @@ def search():
     visited_states = []
 
     # Run as long as the goal state has not been found.
-    while current_state[1] != goal[0] or current_state[2] != goal[1]:
+    while current_state[1:] != goal:
         possible_new_states = []
         # Move through the move options from the current state.
         for action in delta:
@@ -46,9 +45,9 @@ def search():
                 next_state = [current_state[0]+1, new_state[0], new_state[1]]
 
                 # -1 not in next_state - check whether the next state is outside of the map.
-                # next_state[0] < 5 - check if we are inside the map on the x-axis.
-                # next_state[1] < 6 - check if we are inside te map on the y-axis.
-                # grid[next_state[0]][next_state[1]] is not 1 - check so the value of the next state is not 1 (obstacle).
+                # next_state[1] < 5 - check if we are inside the map on the x-axis.
+                # next_state[2] < 6 - check if we are inside te map on the y-axis.
+                # grid[next_state[1]][next_state[2]] != 1 - check so the value of the next state is not 1 (obstacle).
                 # next_state[1:] not in visited_states - if the next state has not been visited before.
                 if -1 not in next_state and next_state[1] < 5 and next_state[2] < 6 and grid[next_state[1]][next_state[2]] != 1 and next_state[1:] not in visited_states:
                     # Next state is a valid move, add it to the list of possible new states.
